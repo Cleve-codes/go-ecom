@@ -96,8 +96,8 @@ const fetchRelatedProducts = async (currentId: string) => {
   try {
     const res = await productsAPI.getAll()
     const baseURL = import.meta.env.VITE_API_BASE_URL
-    // Exclude current product
-    relatedProducts.value = res.filter((p: any) => p.id !== currentId).map((p: any) => ({
+    // Exclude current product and limit to 4
+    relatedProducts.value = res.filter((p: any) => p.id !== currentId).slice(0, 4).map((p: any) => ({
       ...p,
       image_url: imageMap[p.name] || (baseURL + p.image_url)
     }))

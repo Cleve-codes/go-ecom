@@ -71,7 +71,8 @@ async function fetchOrders() {
   loading.value = true;
   error.value = '';
   try {
-    orders.value = await ordersAPI.getAll();
+    const result = await ordersAPI.getAll();
+    orders.value = Array.isArray(result) ? result : [];
   } catch (e: any) {
     error.value = e.message || 'Failed to fetch orders.';
     orders.value = [];
