@@ -13,7 +13,7 @@
               <ShoppingBagIcon class="w-5 h-5 text-white" />
             </div>
             <span class="hidden sm:block bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
-              ShopVue
+              Go Ecom
             </span>
           </RouterLink>
         </div>
