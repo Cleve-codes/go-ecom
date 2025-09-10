@@ -27,7 +27,7 @@ const routes: RouteRecordRaw[] = [
     name: 'products',
     component: Products,
     meta: {
-      title: 'Products - ShopVue',
+      title: 'Products - Go Ecom',
       description: 'Browse our amazing collection of products'
     }
   },
@@ -36,8 +36,8 @@ const routes: RouteRecordRaw[] = [
     name: 'home',
     component: Home,
     meta: {
-      title: 'Home - ShopVue',
-      description: 'Welcome to ShopVue - Your modern e-commerce destination'
+      title: 'Home - Go Ecom',
+      description: 'Welcome to Go Ecom - Your modern e-commerce destination'
     }
   },
   {
@@ -46,7 +46,7 @@ const routes: RouteRecordRaw[] = [
     component: ProductDetail,
     props: true,
     meta: {
-      title: 'Product Details - ShopVue'
+      title: 'Product Details - Go Ecom'
     }
   },
   {
@@ -54,7 +54,7 @@ const routes: RouteRecordRaw[] = [
     name: 'checkout',
     component: Checkout,
     meta: {
-      title: 'Checkout - ShopVue',
+      title: 'Checkout - Go Ecom',
       requiresAuth: true
     }
   },
@@ -63,7 +63,7 @@ const routes: RouteRecordRaw[] = [
     name: 'login',
     component: Login,
     meta: {
-      title: 'Sign In - ShopVue',
+      title: 'Sign In - Go Ecom',
       requiresGuest: true
     }
   },
@@ -72,7 +72,7 @@ const routes: RouteRecordRaw[] = [
     name: 'register',
     component: Register,
     meta: {
-      title: 'Sign Up - ShopVue',
+      title: 'Sign Up - Go Ecom',
       requiresGuest: true
     }
   },
@@ -81,7 +81,7 @@ const routes: RouteRecordRaw[] = [
     name: 'profile',
     component: Profile,
     meta: {
-      title: 'My Profile - ShopVue',
+      title: 'My Profile - Go Ecom',
       requiresAuth: true
     }
   },
@@ -90,7 +90,7 @@ const routes: RouteRecordRaw[] = [
     name: 'orders',
     component: Orders,
     meta: {
-      title: 'My Orders - ShopVue',
+      title: 'My Orders - Go Ecom',
       requiresAuth: true
     }
   },
@@ -100,7 +100,7 @@ const routes: RouteRecordRaw[] = [
     component: OrderDetail,
     props: true,
     meta: {
-      title: 'Order Details - ShopVue',
+      title: 'Order Details - Go Ecom',
       requiresAuth: true
     }
   },
@@ -120,7 +120,7 @@ const routes: RouteRecordRaw[] = [
         name: 'admin-dashboard',
         component: AdminDashboard,
         meta: {
-          title: 'Admin Dashboard - ShopVue',
+          title: 'Admin Dashboard - Go Ecom',
           requiresAuth: true,
           requiresAdmin: true
         }
@@ -130,7 +130,7 @@ const routes: RouteRecordRaw[] = [
         name: 'admin-products',
         component: AdminProducts,
         meta: {
-          title: 'Manage Products - Admin - ShopVue',
+          title: 'Manage Products - Admin - Go Ecom',
           requiresAuth: true,
           requiresAdmin: true
         }
@@ -140,7 +140,7 @@ const routes: RouteRecordRaw[] = [
         name: 'admin-orders',
         component: AdminOrders,
         meta: {
-          title: 'Manage Orders - Admin - ShopVue',
+          title: 'Manage Orders - Admin - Go Ecom',
           requiresAuth: true,
           requiresAdmin: true
         }
@@ -154,7 +154,7 @@ const routes: RouteRecordRaw[] = [
     name: 'unauthorized',
     component: Unauthorized,
     meta: {
-      title: 'Unauthorized - ShopVue'
+      title: 'Unauthorized - Go Ecom'
     }
   },
   {
@@ -162,7 +162,7 @@ const routes: RouteRecordRaw[] = [
     name: 'not-found',
     component: NotFound,
     meta: {
-      title: 'Page Not Found - ShopVue'
+      title: 'Page Not Found - Go Ecom'
     }
   }
 ]
