@@ -158,15 +158,6 @@ npm run dev
 - Backend: See `backend/.env.example` for DB, JWT, etc.
 - Frontend: See `frontend/.env.example` for `VITE_API_BASE_URL` (must point to deployed backend API)
 
----
-
-## 📝 Contribution & Commit Guidelines
-
-- Use [Conventional Commits](https://www.conventionalcommits.org/) (e.g., `feat:`, `fix:`, `chore:`)
-- Commit in logical, incremental steps (see commit plan in project docs)
-- Write clear PR descriptions and reference issues where possible
-
----
 
 ---
 
@@ -190,9 +181,4 @@ npm run dev
 
 ## 🌐 Credits
 
-Created by Cleve-codes, 2025
-
----
-
-## 📄 License
-MIT
+Created by Cleve, 2025
