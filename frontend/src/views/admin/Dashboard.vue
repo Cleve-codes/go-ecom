@@ -242,7 +242,7 @@
 
     // Fetch users (admin endpoint)
     try {
-      const res = await axios.get('http://localhost:8082/api/admin/users', {
+  const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/users`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       })
       summary.value.users = res.data.length
