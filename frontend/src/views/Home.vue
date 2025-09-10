@@ -231,23 +231,30 @@ const features = [
   },
 ]
 
-// Image mapping
+// Image mapping (updated with product names from DB)
 const imageMap: Record<string, string> = {
-  'Laptop Pro': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80',
-  'Wireless Headphones': 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80',
-  'Coffee Mug': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-  'Running Shoes': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80',
+  'Apple Watch Series 9': 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?auto=format&fit=crop&w=600&q=80',
+  'LG C3 55" OLED': 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80',
+  'Apple iPad Air (2024)': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80',
+  'Samsung Galaxy Tab S9': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80',
+  'Sony WH-1000XM5': 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80',
+  'iPhone 15 Pro': 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80',
+  'Samsung Galaxy S24 Ultra': 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80',
+  'MacBook Pro 16" M3': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80',
+  'Dell XPS 13': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80',
+  'Sony Bravia XR 65" OLED': 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80',
 }
 
 // Methods
 const loadFeaturedProducts = async (): Promise<void> => {
   try {
     loading.value = true
-    const response = await productsAPI.getAll({ limit: 4 })
+    const response = await productsAPI.getAll({ limit: 8 })
     const arr = Array.isArray(response) ? response : response.products
+    const baseURL = import.meta.env.VITE_API_BASE_URL
     featuredProducts.value = arr.map((p: any) => ({
       ...p,
-      image_url: imageMap[p.name] || p.image_url
+      image_url: imageMap[p.name] || (baseURL + p.image_url)
     }))
   } catch (error) {
     console.error('Failed to load featured products:', error)
@@ -267,7 +274,7 @@ const subscribeNewsletter = async (): Promise<void> => {
   try {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000))
-    // In real app, call newsletter API here
+    
     console.log('Subscribed:', newsletterEmail.value)
     newsletterEmail.value = ''
   } catch (error) {
@@ -281,8 +288,9 @@ const subscribeNewsletter = async (): Promise<void> => {
 onMounted(async () => {
   await loadFeaturedProducts()
   // Pick the first featured product for the hero
+  const baseURL = import.meta.env.VITE_API_BASE_URL
   heroProduct.value = featuredProducts.value.length > 0
-    ? { ...featuredProducts.value[0], image_url: imageMap[featuredProducts.value[0].name] || featuredProducts.value[0].image_url }
+    ? { ...featuredProducts.value[0], image_url: imageMap[featuredProducts.value[0].name] || (baseURL + featuredProducts.value[0].image_url) }
     : null
 })
 </script>

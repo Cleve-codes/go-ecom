@@ -62,10 +62,16 @@ const error = ref<string | null>(null)
 const addingToCart = ref(false)
 const relatedProducts = ref<any[]>([])
 const imageMap: Record<string, string> = {
-  'Laptop Pro': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80',
-  'Wireless Headphones': 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80',
-  'Coffee Mug': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-  'Running Shoes': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80',
+  'Apple Watch Series 9': 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?auto=format&fit=crop&w=600&q=80',
+  'LG C3 55" OLED': 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80',
+  'Apple iPad Air (2024)': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80',
+  'Samsung Galaxy Tab S9': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80',
+  'Sony WH-1000XM5': 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80',
+  'iPhone 15 Pro': 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80',
+  'Samsung Galaxy S24 Ultra': 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80',
+  'MacBook Pro 16" M3': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80',
+  'Dell XPS 13': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80',
+  'Sony Bravia XR 65" OLED': 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80',
 }
 
 const fetchProduct = async (id: string | number) => {
@@ -73,9 +79,10 @@ const fetchProduct = async (id: string | number) => {
   error.value = null
   try {
     const res = await productsAPI.getById(id as string)
+    const baseURL = import.meta.env.VITE_API_BASE_URL
     product.value = {
       ...res,
-      image_url: imageMap[res.name] || res.image_url
+      image_url: imageMap[res.name] || (baseURL + res.image_url)
     }
     await fetchRelatedProducts(res.id)
   } catch (e: any) {
@@ -88,10 +95,11 @@ const fetchProduct = async (id: string | number) => {
 const fetchRelatedProducts = async (currentId: string) => {
   try {
     const res = await productsAPI.getAll()
+    const baseURL = import.meta.env.VITE_API_BASE_URL
     // Exclude current product
     relatedProducts.value = res.filter((p: any) => p.id !== currentId).map((p: any) => ({
       ...p,
-      image_url: imageMap[p.name] || p.image_url
+      image_url: imageMap[p.name] || (baseURL + p.image_url)
     }))
   } catch (e) {
     relatedProducts.value = []

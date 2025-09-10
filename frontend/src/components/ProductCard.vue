@@ -94,7 +94,7 @@
           </span>
         </div>
 
-        <!-- Rating (placeholder for future implementation) -->
+        <!-- Rating (placeholder) -->
         <div class="flex items-center space-x-1">
           <div class="flex text-yellow-400">
             <StarIcon class="w-4 h-4 fill-current" />
@@ -173,11 +173,25 @@ const props = defineProps<Props>()
 const router = useRouter()
 const cartStore = useCartStore()
 
-// State
+// Image mapping
+const imageMap: Record<string, string> = {
+  'Apple Watch Series 9': 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?auto=format&fit=crop&w=600&q=80',
+  'LG C3 55" OLED': 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80',
+  'Apple iPad Air (2024)': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80',
+  'Samsung Galaxy Tab S9': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80',
+  'Sony WH-1000XM5': 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80',
+  'iPhone 15 Pro': 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80',
+  'Samsung Galaxy S24 Ultra': 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80',
+  'MacBook Pro 16" M3': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80',
+  'Dell XPS 13': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80',
+  'Sony Bravia XR 65" OLED': 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80',
+}
 
+// State
+const baseURL = import.meta.env.VITE_API_BASE_URL
 const addingToCart = ref(false)
-const isFavorite = ref(false) // This would come from a favorites store in a real app
-const imageSrc = ref(props.product.image_url || '/placeholder-product.jpg')
+const isFavorite = ref(false) 
+const imageSrc = ref(imageMap[props.product.name] || (baseURL + props.product.image_url) || '/placeholder-product.jpg')
 
 // Computed
 const stockIndicatorClass = computed(() => {
@@ -193,8 +207,7 @@ const stockText = computed(() => {
 })
 
 const isOnSale = computed(() => {
-  // This would be based on actual sale logic
-  return Math.random() > 0.8 // Placeholder logic
+  return Math.random() > 0.8 
 })
 
 // Methods
@@ -210,15 +223,11 @@ const addToCart = async (): Promise<void> => {
   try {
     const success = cartStore.addItem(props.product)
     if (!success) {
-      // Could show a toast notification here
       console.warn('Could not add item to cart - insufficient stock')
     }
-    // Optional: Show success feedback
   } catch (error) {
     console.error('Error adding to cart:', error)
-    // Could show error toast here
   } finally {
-    // Small delay for better UX
     setTimeout(() => {
       addingToCart.value = false
     }, 500)
@@ -227,7 +236,6 @@ const addToCart = async (): Promise<void> => {
 
 const toggleFavorite = (): void => {
   isFavorite.value = !isFavorite.value
-  // In a real app, this would sync with a favorites store/API
 }
 
 const navigateToProduct = (): void => {
