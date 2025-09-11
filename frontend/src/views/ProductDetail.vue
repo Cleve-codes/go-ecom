@@ -97,7 +97,7 @@ const fetchRelatedProducts = async (currentId: string) => {
     const res = await productsAPI.getAll()
     const baseURL = import.meta.env.VITE_API_BASE_URL
     // Exclude current product and limit to 4
-    relatedProducts.value = res.filter((p: any) => p.id !== currentId).slice(0, 4).map((p: any) => ({
+    relatedProducts.value = res.products.filter((p: any) => p.id !== currentId).slice(0, 4).map((p: any) => ({
       ...p,
       image_url: imageMap[p.name] || (baseURL + p.image_url)
     }))
@@ -110,7 +110,7 @@ const addToCart = async () => {
   if (!product.value) return
   addingToCart.value = true
   try {
-    cartStore.addToCart(product.value)
+    cartStore.addItem(product.value)
   } finally {
     addingToCart.value = false
   }
