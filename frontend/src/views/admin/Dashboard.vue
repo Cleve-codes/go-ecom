@@ -234,7 +234,7 @@
       .slice(0, 5)
       .map(order => ({
         id: order.id,
-        user: order.user_id,
+        user: order.user_name,
         amount: order.total_amount,
         status: order.status,
         date: order.created_at.split('T')[0]

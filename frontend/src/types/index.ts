@@ -69,6 +69,7 @@ export interface CartItem {
 export interface Order {
   id: string
   user_id: string
+  user_name: string
   status: 'pending' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
   total_amount: number
   shipping_address: string

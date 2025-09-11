@@ -84,8 +84,8 @@ func (h *OrderHandler) CreateOrder(c *fiber.Ctx) error {
 	// Fetch and return the created order (simplified)
 	var order models.Order
 	err = h.db.QueryRow(
-		`SELECT id, user_id, status, total_amount, created_at, updated_at FROM orders WHERE id = $1`, orderID,
-	).Scan(&order.ID, &order.UserID, &order.Status, &order.TotalAmount, &order.CreatedAt, &order.UpdatedAt)
+		`SELECT o.id, o.user_id, u.full_name, o.status, o.total_amount, o.created_at, o.updated_at FROM orders o JOIN users u ON o.user_id = u.id WHERE o.id = $1`, orderID,
+	).Scan(&order.ID, &order.UserID, &order.UserName, &order.Status, &order.TotalAmount, &order.CreatedAt, &order.UpdatedAt)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch created order"})
 	}
@@ -119,7 +119,7 @@ func (h *OrderHandler) GetUserOrders(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid user ID"})
 	}
-	rows, err := h.db.Query(`SELECT id, user_id, status, total_amount, created_at, updated_at FROM orders WHERE user_id = $1 ORDER BY created_at DESC`, userUUID)
+	rows, err := h.db.Query(`SELECT o.id, o.user_id, u.full_name, o.status, o.total_amount, o.created_at, o.updated_at FROM orders o JOIN users u ON o.user_id = u.id WHERE o.user_id = $1 ORDER BY o.created_at DESC`, userUUID)
 	if err != nil {
 		// Log the actual SQL error for debugging
 		println("[GetUserOrders SQL ERROR]", err.Error())
@@ -129,7 +129,7 @@ func (h *OrderHandler) GetUserOrders(c *fiber.Ctx) error {
 	var orders []models.Order
 	for rows.Next() {
 		var order models.Order
-		if err := rows.Scan(&order.ID, &order.UserID, &order.Status, &order.TotalAmount, &order.CreatedAt, &order.UpdatedAt); err == nil {
+		if err := rows.Scan(&order.ID, &order.UserID, &order.UserName, &order.Status, &order.TotalAmount, &order.CreatedAt, &order.UpdatedAt); err == nil {
 			// Fetch order items
 			order.Items = []models.OrderItem{}
 			itemRows, err := h.db.Query(`SELECT oi.id, oi.order_id, oi.product_id, oi.quantity, oi.unit_price, p.name FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = $1`, order.ID)
@@ -163,8 +163,8 @@ func (h *OrderHandler) GetUserOrders(c *fiber.Ctx) error {
 func (h *OrderHandler) GetOrder(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var order models.Order
-	err := h.db.QueryRow(`SELECT id, user_id, status, total_amount, created_at, updated_at FROM orders WHERE id = $1`, id).
-		Scan(&order.ID, &order.UserID, &order.Status, &order.TotalAmount, &order.CreatedAt, &order.UpdatedAt)
+	err := h.db.QueryRow(`SELECT o.id, o.user_id, u.full_name, o.status, o.total_amount, o.created_at, o.updated_at FROM orders o JOIN users u ON o.user_id = u.id WHERE o.id = $1`, id).
+		Scan(&order.ID, &order.UserID, &order.UserName, &order.Status, &order.TotalAmount, &order.CreatedAt, &order.UpdatedAt)
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{"error": "Order not found"})
 	}
@@ -193,7 +193,7 @@ func (h *OrderHandler) GetOrder(c *fiber.Ctx) error {
 // @Success 200 {array} models.Order
 // @Router /api/admin/orders [get]
 func (h *OrderHandler) GetAllOrders(c *fiber.Ctx) error {
-	rows, err := h.db.Query(`SELECT id, user_id, status, total_amount, created_at, updated_at FROM orders ORDER BY created_at DESC`)
+	rows, err := h.db.Query(`SELECT o.id, o.user_id, u.full_name, o.status, o.total_amount, o.created_at, o.updated_at FROM orders o JOIN users u ON o.user_id = u.id ORDER BY o.created_at DESC`)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch orders"})
 	}
@@ -201,7 +201,7 @@ func (h *OrderHandler) GetAllOrders(c *fiber.Ctx) error {
 	var orders []models.Order
 	for rows.Next() {
 		var order models.Order
-		if err := rows.Scan(&order.ID, &order.UserID, &order.Status, &order.TotalAmount, &order.CreatedAt, &order.UpdatedAt); err == nil {
+		if err := rows.Scan(&order.ID, &order.UserID, &order.UserName, &order.Status, &order.TotalAmount, &order.CreatedAt, &order.UpdatedAt); err == nil {
 			// Fetch order items
 			itemRows, err := h.db.Query(`SELECT oi.id, oi.order_id, oi.product_id, oi.quantity, oi.unit_price, p.name FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = $1`, order.ID)
 			if err == nil {
