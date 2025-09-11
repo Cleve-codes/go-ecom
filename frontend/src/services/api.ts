@@ -186,7 +186,7 @@ export const ordersAPI = {
 
   updateStatus: async (id: string, status: Order['status']): Promise<Order> => {
     try {
-      const response = await api.patch<Order>(`/orders/${id}/status`, { status })
+      const response = await api.put<Order>(`/admin/orders/${id}/status`, { status })
       return handleResponse(response)
     } catch (error) {
       return handleError(error as AxiosError)

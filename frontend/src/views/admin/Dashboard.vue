@@ -45,6 +45,7 @@
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">User</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
               </tr>
             </thead>
@@ -55,6 +56,21 @@
                 <td class="px-4 py-2 whitespace-nowrap">${{ (order.amount ?? 0).toLocaleString() }}</td>
                 <td class="px-4 py-2 whitespace-nowrap">
                   <span :class="statusClass(order.status)">{{ order.status }}</span>
+                </td>
+                <td class="px-4 py-2 whitespace-nowrap">
+                  <select
+                    :value="order.status"
+                    @change="updateOrderStatus(order.id, $event.target.value)"
+                    class="border rounded px-2 py-1 text-sm"
+                    :disabled="updatingOrder === order.id"
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="paid">Paid</option>
+                    <option value="processing">Processing</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
                 </td>
                 <td class="px-4 py-2 whitespace-nowrap">{{ order.date }}</td>
               </tr>
@@ -143,6 +159,7 @@
     plugins: { legend: { position: 'bottom' }, title: { display: false } }
   }
   const recentOrders = ref<any[]>([])
+  const updatingOrder = ref<string | null>(null)
 
   // Product management state
   const products = ref<any[]>([])
@@ -300,6 +317,25 @@
     if (!confirm('Are you sure you want to delete this product?')) return
     await productsAPI.delete(id)
     await fetchDashboardData()
+  }
+
+  async function updateOrderStatus(orderId: string, newStatus: string) {
+    updatingOrder.value = orderId
+    try {
+      await ordersAPI.updateStatus(orderId, newStatus as any)
+      // Update the local order status
+      const order = recentOrders.value.find(o => o.id === orderId)
+      if (order) {
+        order.status = newStatus
+      }
+      // Refresh dashboard data to update charts
+      await fetchDashboardData()
+    } catch (error) {
+      console.error('Failed to update order status:', error)
+      alert('Failed to update order status')
+    } finally {
+      updatingOrder.value = null
+    }
   }
 
   onMounted(fetchDashboardData)

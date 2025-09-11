@@ -93,6 +93,7 @@ func main() {
 	api.Get("/orders", middleware.AuthRequired(cfg.JWTSecret), orderHandler.GetUserOrders)
 	api.Post("/orders", middleware.AuthRequired(cfg.JWTSecret), orderHandler.CreateOrder)
 	api.Get("/admin/orders", middleware.AuthRequired(cfg.JWTSecret), middleware.AdminRequired(), orderHandler.GetAllOrders)
+	api.Put("/admin/orders/:id/status", middleware.AuthRequired(cfg.JWTSecret), middleware.AdminRequired(), orderHandler.UpdateOrderStatus)
 
 	// M-Pesa payment simulation routes
 	api.Post("/mpesa/stkpush", middleware.AuthRequired(cfg.JWTSecret), mpesaHandler.InitiateSTKPush)
