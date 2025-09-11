@@ -218,7 +218,7 @@ func (h *OrderHandler) GetAllOrders(c *fiber.Ctx) error {
 			orders = append(orders, order)
 		}
 	}
-	return c.Status(201).JSON(orders)
+	return c.Status(200).JSON(orders)
 }
 
 // @Summary Update order status (admin)
@@ -243,8 +243,33 @@ func (h *OrderHandler) UpdateOrderStatus(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to update order status"})
 	}
-	// Return updated order with 201 status
-	orderResp := h.GetOrder(c)
-	c.Status(201)
-	return orderResp
+
+	// Fetch and return the updated order
+	var order models.Order
+	err = h.db.QueryRow(
+		`SELECT o.id, o.user_id, u.full_name, o.status, o.total_amount, o.created_at, o.updated_at FROM orders o JOIN users u ON o.user_id = u.id WHERE o.id = $1`, id,
+	).Scan(&order.ID, &order.UserID, &order.UserName, &order.Status, &order.TotalAmount, &order.CreatedAt, &order.UpdatedAt)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch updated order"})
+	}
+
+	// Fetch order items
+	order.Items = []models.OrderItem{}
+	itemRows, err := h.db.Query(`SELECT oi.id, oi.order_id, oi.product_id, oi.quantity, oi.unit_price, p.name FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = $1`, id)
+	if err == nil {
+		for itemRows.Next() {
+			var item models.OrderItem
+			var productName string
+			if err := itemRows.Scan(&item.ID, &item.OrderID, &item.ProductID, &item.Quantity, &item.Price, &productName); err == nil {
+				item.Product = &models.Product{Name: productName}
+				order.Items = append(order.Items, item)
+			}
+		}
+		itemRows.Close()
+	}
+	if order.Items == nil {
+		order.Items = []models.OrderItem{}
+	}
+
+	return c.Status(200).JSON(order)
 }

@@ -37,7 +37,7 @@ func (h *UserHandler) GetAllUsers(c *fiber.Ctx) error {
 		}
 		users = append(users, user)
 	}
-	return c.Status(201).JSON(users)
+	return c.Status(200).JSON(users)
 }
 
 // @Summary Get user by ID
@@ -59,7 +59,7 @@ func (h *UserHandler) GetUserByID(c *fiber.Ctx) error {
 		}
 		return c.Status(500).JSON(fiber.Map{"error": "Database error"})
 	}
-	return c.Status(201).JSON(user)
+	return c.Status(200).JSON(user)
 }
 
 // @Summary Update user info/role
@@ -113,7 +113,7 @@ func (h *UserHandler) UpdateUser(c *fiber.Ctx) error {
 		}
 		return c.Status(500).JSON(fiber.Map{"error": "Database error"})
 	}
-	return c.Status(201).JSON(user)
+	return c.Status(200).JSON(user)
 }
 
 // @Summary Delete (soft) user
