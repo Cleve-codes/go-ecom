@@ -92,8 +92,7 @@ const handleCheckout = async () => {
     //   phone_number: phone.value
     // })
     // 3. On success, clear cart and show confirmation
-    cart.items = []
-    cart.saveToStorage()
+    cart.clearCart()
     success.value = 'Order placed! Please complete the payment on your phone.'
     setTimeout(() => router.push('/orders'), 3000)
   } catch (e: any) {
